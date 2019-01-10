@@ -1,3 +1,6 @@
 second file
+<<<<<<< HEAD
 eudfebdi
 modified in fb1
+=======
+>>>>>>> firstbranch
