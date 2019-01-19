@@ -1,0 +1,52 @@
+root@ip-172-31-87-135:/home/ubuntu# apt-get update && apt-get install -y apt-transport-https
+root@ip-172-31-87-135:/home/ubuntu# curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+root@ip-172-31-87-135:/home/ubuntu# cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+root@ip-172-31-87-135:/home/ubuntu# apt-get update
+root@ip-172-31-87-135:/home/ubuntu# apt-get install -y docker.io
+root@ip-172-31-87-135:/home/ubuntu# apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+
+root@ip-172-31-87-135:/home/ubuntu# kubeadm init
+
+kubeadm join 172.31.87.135:6443 --token dspxe4.xeqnkxm0fvr2ooju --discovery-token-ca-cert-hash sha256:cd656070da9c129faabcfe61829e48be7e4d0306c4cf40bb2bf87ec61c46e78a
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl version
+root@ip-172-31-87-135:/home/ubuntu# mkdir -p $HOME/.kube
+root@ip-172-31-87-135:/home/ubuntu# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+root@ip-172-31-87-135:/home/ubuntu# sudo chown $(id -u):$(id -g) $HOME/.kube/config
+root@ip-172-31-87-135:/home/ubuntu# kubectl version
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl get nodes
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl get service
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl get namespace
+
+=>Installing a sample application - on the master
+Now it is time to check if our new cluster is working. Sock
+Shop is a sample microservices application that shows
+how to run and connect a set of services on Kubernetes:
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl create namespace sock-shop
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl get namespace
+
+=>Then, apply to install all the component of Sock Shop:
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl apply -n sock-shop -f "https://github.com/microservices-demo/microservices-demo/blob/master/deploy/kubernetes/complete-demo.yaml?raw=true"
+
+=>We can then find out the port that the NodePort feature
+of services allocated for the front-end service by running:
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl -n sock-shop get svc front-end
+
+
+=>It takes several minutes to download and start all the
+containers, watch the output of kubectl get pods -n sockshop
+to see when they're all up and running:
+
+root@ip-172-31-87-135:/home/ubuntu# kubectl get pods -n sock-shop
+
+Then go to the IP address of our cluster's master node in
+our browser, and specify the given port.
